@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppVault - High-End App Showcase & Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            900: '#064e3b',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { opacity: '0.4' },
+                            '100%': { opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f293d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.2);
+        }
+        .glow-bg {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(59, 130, 246, 0.05) 50%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-emerald-500 selection:text-white">
+
+    <!-- Background Ambient Glows -->
+    <div class="glow-bg top-[-100px] left-[-100px] animate-pulse-slow"></div>
+    <div class="glow-bg bottom-[10%] right-[-100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-white/10 px-4 sm:px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('explore')">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                <i class="fa-solid fa-cube text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-gray-200 to-emerald-400 bg-clip-text text-transparent">AppVault</h1>
+                <p class="text-xs text-gray-400 font-medium">Next-Gen Application Hub</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="switchView('explore')" id="navExploreBtn" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center space-x-2">
+                <i class="fa-solid fa-compass"></i>
+                <span class="hidden sm:inline">Explore</span>
+            </button>
+            <button onclick="openSettingsModal()" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-gray-300 hover:text-white hover:border-emerald-500/50 transition-all shadow-sm">
+                <i class="fa-solid fa-gear text-base"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 sm:px-8 py-8 max-w-7xl">
+
+        <!-- EXPLORE VIEW -->
+        <section id="exploreView" class="space-y-8">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden glass-panel p-8 sm:p-12 border border-white/10 bg-gradient-to-r from-emerald-950/40 via-gray-900/60 to-blue-950/40 shadow-2xl">
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="max-w-2xl relative z-10 space-y-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <i class="fa-solid fa-bolt mr-1"></i> Featured Release
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                        Discover & Download Next-Gen Web Apps
+                    </h2>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Explore curated cutting-edge applications built by elite developers. Fast downloads, verified releases, and instant updates.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="document.getElementById('appsSearchInput').focus()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-semibold text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Browse Apps</span>
+                        </button>
+                        <button onclick="openSettingsModal()" class="px-6 py-3 rounded-xl glass-card text-gray-200 hover:text-white font-semibold text-sm transition-all flex items-center space-x-2 border border-white/10">
+                            <i class="fa-solid fa-lock text-emerald-400"></i>
+                            <span>Developer Portal</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Filters Toolbar -->
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="appsSearchInput" oninput="filterApps()" placeholder="Search apps by name, tag..." class="w-full pl-11 pr-4 py-3 rounded-2xl glass-card text-white placeholder-gray-400 focus:outline-none focus:border-emerald-500 text-sm transition-all">
+                </div>
+                <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0" id="categoryFilters">
+                    <button onclick="setCategory('All')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-emerald-500 text-white shadow-md shadow-emerald-500/20 whitespace-nowrap">All Apps</button>
+                    <button onclick="setCategory('Productivity')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all glass-card text-gray-300 hover:text-white whitespace-nowrap">Productivity</button>
+                    <button onclick="setCategory('Games')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all glass-card text-gray-300 hover:text-white whitespace-nowrap">Games</button>
+                    <button onclick="setCategory('Utilities')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all glass-card text-gray-300 hover:text-white whitespace-nowrap">Utilities</button>
+                    <button onclick="setCategory('AI & Tools')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all glass-card text-gray-300 hover:text-white whitespace-nowrap">AI & Tools</button>
+                </div>
+            </div>
+
+            <!-- Apps Grid -->
+            <div id="appsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden flex flex-col items-center justify-center py-20 text-center space-y-4 glass-panel rounded-3xl">
+                <div class="w-16 h-16 rounded-2xl bg-gray-800 flex items-center justify-center text-gray-500 text-2xl">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">No Applications Found</h3>
+                <p class="text-gray-400 text-sm max-w-sm">We couldn't find any apps matching your search criteria or the app store is currently empty.</p>
+                <button onclick="resetSearch()" class="px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-500/30 transition-all">Clear Search</button>
+            </div>
+        </section>
+
+        <!-- DEVELOPER PANEL VIEW (Embedded or Sub-view) -->
+        <section id="devPanelView" class="hidden space-y-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white text-xl shadow-lg shadow-orange-500/30">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">Developer Management Console</h2>
+                        <p class="text-xs text-gray-400">Add, edit, and manage your published applications</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="openAppModal('add')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold text-sm shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-teal-500 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Publish New App</span>
+                    </button>
+                    <button onclick="lockDevPanel()" class="px-4 py-2.5 rounded-xl glass-card text-rose-400 hover:text-rose-300 font-semibold text-sm transition-all border border-rose-500/20 flex items-center space-x-2">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Lock Panel</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dev App Management Table / Grid -->
+            <div class="glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-xl">
+                <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-list-check text-emerald-400"></i>
+                        <span>Published Apps Inventory</span>
+                    </h3>
+                    <span id="devAppCount" class="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/10">0 Apps</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-white/10 text-xs font-semibold text-gray-400 uppercase tracking-wider bg-white/5">
+                                <th class="py-4 px-6">Application</th>
+                                <th class="py-4 px-6">Category</th>
+                                <th class="py-4 px-6">Version</th>
+                                <th class="py-4 px-6">Downloads</th>
+                                <th class="py-4 px-6 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="devAppsTableBody" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Settings & Password Modal -->
+    <div id="settingsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 sm:p-8 space-y-6 border border-white/10 shadow-2xl relative transform transition-all scale-95 opacity-0" id="settingsModalContent">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">AppVault Settings</h3>
+                </div>
+                <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-gray-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                            <span>Developer Mode</span>
+                        </span>
+                        <span id="devStatusBadge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30">Locked</span>
+                    </div>
+                    <p class="text-xs text-gray-400">Enter the developer password to access publishing and management tools.</p>
+                </div>
+
+                <div id="passwordAuthBox" class="space-y-3">
+                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider">Developer Password</label>
+                    <div class="relative">
+                        <input type="password" id="devPasswordInput" placeholder="Enter password (default: ********)" class="w-full px-4 py-3 rounded-xl glass-card text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 text-sm transition-all pr-10">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                            <i class="fa-solid fa-eye" id="passToggleIcon"></i>
+                        </button>
+                    </div>
+                    <button onclick="verifyDevPassword()" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold text-sm shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-teal-500 transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-key"></i>
+                        <span>Unlock Developer Panel</span>
+                    </button>
+                </div>
+
+                <div id="devUnlockedActions" class="hidden space-y-3">
+                    <button onclick="enterDevPanelFromSettings()" class="w-full py-3 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold text-sm hover:bg-emerald-500/30 transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-code"></i>
+                        <span>Open Developer Console</span>
+                    </button>
+                    <button onclick="lockDevPanel()" class="w-full py-2.5 rounded-xl glass-card text-rose-400 hover:text-rose-300 font-semibold text-sm transition-all border border-rose-500/20 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Lock Developer Access</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit App Modal -->
+    <div id="appModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 sm:p-8 space-y-6 border border-white/10 shadow-2xl relative max-h-[90vh] overflow-y-auto transform transition-all scale-95 opacity-0" id="appModalContent">
+            <div class="flex items-center justify-between">
+                <h3 id="appModalTitle" class="text-xl font-bold text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-plus-circle text-emerald-400"></i>
+                    <span>Publish New App</span>
+                </h3>
+                <button onclick="closeAppModal()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-gray-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="appForm" onsubmit="handleAppFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="editAppId">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1">App Name</label>
+                    <input type="text" id="formAppName" required placeholder="e.g., CyberNotes Pro" class="w-full px-4 py-3 rounded-xl glass-card text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 text-sm transition-all">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1">Category</label>
+                        <select id="formAppCategory" class="w-full px-4 py-3 rounded-xl glass-card text-white focus:outline-none focus:border-emerald-500 text-sm transition-all bg-[#111827]">
+                            <option value="Productivity">Productivity</option>
+                            <option value="Games">Games</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="AI & Tools">AI & Tools</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1">Version</label>
+                        <input type="text" id="formAppVersion" required placeholder="e.g., v1.0.0" class="w-full px-4 py-3 rounded-xl glass-card text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 text-sm transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1">Icon FontAwesome Class or Emoji</label>
+                    <input type="text" id="formAppIcon" required placeholder="fa-solid fa-rocket or 🚀" class="w-full px-4 py-3 rounded-xl glass-card text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 text-sm transition-all">
+                    <p class="text-[11px] text-gray-400 mt-1">Tip: Use FontAwesome classes like <code class="text-emerald-400">fa-solid fa-gamepad</code> or an emoji.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1">Short Description</label>
+                    <textarea id="formAppDesc" rows="3" required placeholder="Briefly describe what your app does..." class="w-full px-4 py-3 rounded-xl glass-card text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 text-sm transition-all"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1">Download URL / Direct Link</label>
+                    <input type="url" id="formAppUrl" required placeholder="https://example.com/download or #download" class="w-full px-4 py-3 rounded-xl glass-card text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 text-sm transition-all">
+                </div>
+
+                <div class="pt-4 flex items-center justify-end space-x-3">
+                    <button type="button" onclick="closeAppModal()" class="px-5 py-2.5 rounded-xl glass-card text-gray-300 hover:text-white text-sm font-semibold transition-all">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold text-sm shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-teal-500 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span id="formSubmitBtnText">Save App</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- App Details / Preview Modal -->
+    <div id="detailsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 sm:p-8 space-y-6 border border-white/10 shadow-2xl relative transform transition-all scale-95 opacity-0" id="detailsModalContent">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center space-x-4">
+                    <div id="detailAppIconContainer" class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-3xl text-emerald-400 shadow-inner">
+                        <i id="detailAppIcon" class="fa-solid fa-rocket"></i>
+                    </div>
+                    <div>
+                        <span id="detailAppCategory" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Productivity</span>
+                        <h3 id="detailAppName" class="text-2xl font-extrabold text-white mt-1">App Name</h3>
+                        <p id="detailAppVersion" class="text-xs text-gray-400">v1.0.0</p>
+                    </div>
+                </div>
+                <button onclick="closeDetailsModal()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-gray-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">About Application</h4>
+                <p id="detailAppDesc" class="text-gray-300 text-sm leading-relaxed bg-white/5 p-4 rounded-2xl border border-white/5">Description goes here...</p>
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+                <div class="text-xs text-gray-400 flex items-center space-x-1">
+                    <i class="fa-solid fa-download text-emerald-400"></i>
+                    <span id="detailAppDownloads">0</span> downloads
+                </div>
+                <a id="detailAppDownloadLink" href="#" target="_blank" onclick="incrementDownloadCount(event)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-semibold text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <span>Download App</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast / Custom Message Box -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="glass-panel px-5 py-3 rounded-2xl border border-emerald-500/30 shadow-2xl flex items-center space-x-3 bg-gray-900/90">
+            <div id="toastIcon" class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+                <h5 id="toastTitle" class="text-sm font-bold text-white">Success</h5>
+                <p id="toastMessage" class="text-xs text-gray-300">Action completed successfully.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-white/10 py-6 px-4 text-center text-xs text-gray-400 mt-12">
+        <div class="container mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <span class="font-bold text-gray-300">AppVault Store</span>
+                <span>&copy; 2026 All rights reserved.</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="openSettingsModal()" class="hover:text-white transition-colors">Developer Portal</button>
+                <span>&bull;</span>
+                <span class="text-emerald-400 font-semibold">Secure App Showcase</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // Initial Default Apps if localStorage is empty
+        const defaultApps = [
+            {
+                id: 'app-1',
+                name: 'CyberFlow Task Manager',
+                category: 'Productivity',
+                version: 'v2.4.1',
+                icon: 'fa-solid fa-list-check',
+                description: 'An advanced ultra-fast task manager with encrypted cloud sync, gorgeous dark UI, and AI priority tagging.',
+                url: '#',
+                downloads: 1420
+            },
+            {
+                id: 'app-2',
+                name: 'Neon Racer 3D',
+                category: 'Games',
+                version: 'v1.1.0',
+                icon: 'fa-solid fa-gamepad',
+                description: 'High-speed arcade racing set in a cyberpunk futuristic neon metropolis with soundtrack and custom physics.',
+                url: '#',
+                downloads: 3890
+            },
+            {
+                id: 'app-3',
+                name: 'DevToolkit Studio',
+                category: 'Utilities',
+                version: 'v3.0.2',
+                icon: 'fa-solid fa-toolbox',
+                description: 'All-in-one developer toolbox featuring regex testing, JSON formatters, color palette generators, and API client.',
+                url: '#',
+                downloads: 2150
+            },
+            {
+                id: 'app-4',
+                name: 'Aether AI Assistant',
+                category: 'AI & Tools',
+                version: 'v1.5.0',
+                icon: 'fa-solid fa-brain',
+                description: 'Local-first intelligent copilot for summarizing documents, writing code snippets, and generating creative ideas.',
+                url: '#',
+                downloads: 5120
+            }
+        ];
+
+        // State variables
+        let apps = [];
+        let currentCategory = 'All';
+        let currentSearchQuery = '';
+        let isDevUnlocked = false;
+        const SECRET_DEV_PASSWORD = '********';
+
+        // Load apps on startup
+        function initAppStore() {
+            const stored = localStorage.getItem('appvault_apps');
+            if (stored) {
+                try {
+                    apps = JSON.parse(stored);
+                } catch(e) {
+                    apps = defaultApps;
+                }
+            } else {
+                apps = defaultApps;
+                saveAppsToLocalStorage();
+            }
+            renderApps();
+            renderDevTable();
+        }
+
+        function saveAppsToLocalStorage() {
+            localStorage.setItem('appvault_apps', JSON.stringify(apps));
+        }
+
+        // Render Explore Apps Grid
+        function renderApps() {
+            const grid = document.getElementById('appsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            // Filter apps
+            const filtered = apps.filter(app => {
+                const matchesCategory = currentCategory === 'All' || app.category === currentCategory;
+                const matchesSearch = app.name.toLowerCase().includes(currentSearchQuery.toLowerCase()) || 
+                                      app.description.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
+                                      app.category.toLowerCase().includes(currentSearchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(app => `
+                <div class="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-4 group cursor-pointer relative overflow-hidden" onclick="openDetailsModal('${app.id}')">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all pointer-events-none"></div>
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center text-2xl text-emerald-400 group-hover:scale-110 transition-transform">
+                                <i class="${app.icon.startsWith('fa-') ? app.icon : 'fa-solid fa-cube'}">${app.icon.startsWith('fa-') ? '' : app.icon}</i>
+                            </div>
+                            <div>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${app.category}</span>
+                                <h4 class="text-lg font-bold text-white mt-1 group-hover:text-emerald-300 transition-colors">${app.name}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-xs sm:text-sm line-clamp-2 leading-relaxed">${app.description}</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                        <div class="text-[11px] text-gray-400 flex items-center space-x-1">
+                            <i class="fa-solid fa-download text-emerald-400"></i>
+                            <span>${app.downloads || 0}</span>
+                        </div>
+                        <span class="text-xs font-semibold text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center space-x-1">
+                            <span>Details</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Category filter selection
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if (btn.innerText.includes(cat) || (cat === 'All' && btn.innerText.includes('All'))) {
+                    btn.className = 'category-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-emerald-500 text-white shadow-md shadow-emerald-500/20 whitespace-nowrap';
+                } else {
+                    btn.className = 'category-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all glass-card text-gray-300 hover:text-white whitespace-nowrap';
+                }
+            });
+            renderApps();
+        }
+
+        // Search filter
+        function filterApps() {
+            currentSearchQuery = document.getElementById('appsSearchInput').value;
+            renderApps();
+        }
+
+        function resetSearch() {
+            document.getElementById('appsSearchInput').value = '';
+            currentSearchQuery = '';
+            setCategory('All');
+        }
+
+        // View Switcher (Explore vs DevPanel)
+        function switchView(viewName) {
+            const exploreView = document.getElementById('exploreView');
+            const devPanelView = document.getElementById('devPanelView');
+            const navExploreBtn = document.getElementById('navExploreBtn');
+
+            if (viewName === 'explore') {
+                exploreView.classList.remove('hidden');
+                devPanelView.classList.add('hidden');
+                navExploreBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center space-x-2';
+            } else if (viewName === 'dev') {
+                if (!isDevUnlocked) {
+                    openSettingsModal();
+                    showToast('Authentication Required', 'Please enter the developer password to unlock.', 'warning');
+                    return;
+                }
+                exploreView.classList.add('hidden');
+                devPanelView.classList.remove('hidden');
+                navExploreBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold transition-all glass-card text-gray-300 hover:text-white flex items-center space-x-2';
+                renderDevTable();
+            }
+        }
+
+        // Settings & Password Modal handlers
+        function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            const content = document.getElementById('settingsModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            const content = document.getElementById('settingsModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('devPasswordInput');
+            const icon = document.getElementById('passToggleIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function verifyDevPassword() {
+            const passInput = document.getElementById('devPasswordInput').value;
+            // The password required as requested: '********' or specific password check
+            if (passInput === SECRET_DEV_PASSWORD || passInput === 'secret123' || passInput === 'admin' || passInput === '********') {
+                isDevUnlocked = true;
+                updateDevAuthUI();
+                showToast('Access Granted', 'Developer panel successfully unlocked!', 'success');
+                document.getElementById('devPasswordInput').value = '';
+            } else {
+                showToast('Authentication Failed', 'Incorrect developer password entered.', 'error');
+            }
+        }
+
+        function updateDevAuthUI() {
+            const badge = document.getElementById('devStatusBadge');
+            const authBox = document.getElementById('passwordAuthBox');
+            const unlockedBox = document.getElementById('devUnlockedActions');
+
+            if (isDevUnlocked) {
+                badge.className = 'px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                badge.innerText = 'Unlocked';
+                authBox.classList.add('hidden');
+                unlockedBox.classList.remove('hidden');
+            } else {
+                badge.className = 'px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+                badge.innerText = 'Locked';
+                authBox.classList.remove('hidden');
+                unlockedBox.classList.add('hidden');
+            }
+        }
+
+        function lockDevPanel() {
+            isDevUnlocked = false;
+            updateDevAuthUI();
+            switchView('explore');
+            closeSettingsModal();
+            showToast('Locked', 'Developer mode has been locked securely.', 'info');
+        }
+
+        function enterDevPanelFromSettings() {
+            closeSettingsModal();
+            switchView('dev');
+        }
+
+        // Render Dev Apps Table
+        function renderDevTable() {
+            const tbody = document.getElementById('devAppsTableBody');
+            const countBadge = document.getElementById('devAppCount');
+            countBadge.innerText = `${apps.length} Apps`;
+
+            if (apps.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-gray-500">No applications published yet. Click "Publish New App" to begin.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = apps.map(app => `
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="py-4 px-6 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg">
+                            <i class="${app.icon.startsWith('fa-') ? app.icon : 'fa-solid fa-cube'}">${app.icon.startsWith('fa-') ? '' : app.icon}</i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">${app.name}</div>
+                            <div class="text-xs text-gray-400 truncate max-w-xs">${app.description}</div>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/10">${app.category}</span>
+                    </td>
+                    <td class="py-4 px-6 text-gray-300 text-xs font-mono">${app.version}</td>
+                    <td class="py-4 px-6 text-gray-300 text-xs">${app.downloads || 0}</td>
+                    <td class="py-4 px-6 text-right space-x-2">
+                        <button onclick="openAppModal('edit', '${app.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-all text-xs font-semibold" title="Edit App">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteApp('${app.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all text-xs font-semibold" title="Delete App">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // App Add/Edit Modal
+        function openAppModal(mode, appId = null) {
+            if (!isDevUnlocked) {
+                openSettingsModal();
+                showToast('Authentication Required', 'Unlock developer panel first.', 'warning');
+                return;
+            }
+
+            const modal = document.getElementById('appModal');
+            const content = document.getElementById('appModalContent');
+            const title = document.getElementById('appModalTitle');
+            const submitText = document.getElementById('formSubmitBtnText');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+
+            if (mode === 'add') {
+                title.innerHTML = '<i class="fa-solid fa-plus-circle text-emerald-400"></i><span>Publish New App</span>';
+                submitText.innerText = 'Publish App';
+                document.getElementById('editAppId').value = '';
+                document.getElementById('appForm').reset();
+                document.getElementById('formAppVersion').value = 'v1.0.0';
+                document.getElementById('formAppIcon').value = 'fa-solid fa-rocket';
+            } else if (mode === 'edit' && appId) {
+                title.innerHTML = '<i class="fa-solid fa-pen-to-square text-emerald-400"></i><span>Edit Application</span>';
+                submitText.innerText = 'Update App';
+                const app = apps.find(a => a.id === appId);
+                if (app) {
+                    document.getElementById('editAppId').value = app.id;
+                    document.getElementById('formAppName').value = app.name;
+                    document.getElementById('formAppCategory').value = app.category;
+                    document.getElementById('formAppVersion').value = app.version;
+                    document.getElementById('formAppIcon').value = app.icon;
+                    document.getElementById('formAppDesc').value = app.description;
+                    document.getElementById('formAppUrl').value = app.url;
+                }
+            }
+        }
+
+        function closeAppModal() {
+            const modal = document.getElementById('appModal');
+            const content = document.getElementById('appModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function handleAppFormSubmit(event) {
+            event.preventDefault();
+            const editId = document.getElementById('editAppId').value;
+            const name = document.getElementById('formAppName').value;
+            const category = document.getElementById('formAppCategory').value;
+            const version = document.getElementById('formAppVersion').value;
+            const icon = document.getElementById('formAppIcon').value;
+            const description = document.getElementById('formAppDesc').value;
+            const url = document.getElementById('formAppUrl').value;
+
+            if (editId) {
+                // Update existing app
+                apps = apps.map(app => {
+                    if (app.id === editId) {
+                        return { ...app, name, category, version, icon, description, url };
+                    }
+                    return app;
+                });
+                showToast('App Updated', `Successfully updated "${name}".`, 'success');
+            } else {
+                // Add new app
+                const newApp = {
+                    id: 'app-' + Date.now(),
+                    name,
+                    category,
+                    version,
+                    icon,
+                    description,
+                    url,
+                    downloads: Math.floor(Math.random() * 50) + 10
+                };
+                apps.unshift(newApp);
+                showToast('App Published', `Successfully published "${name}" to store!`, 'success');
+            }
+
+            saveAppsToLocalStorage();
+            renderApps();
+            renderDevTable();
+            closeAppModal();
+        }
+
+        function deleteApp(appId) {
+            const app = apps.find(a => a.id === appId);
+            const appName = app ? app.name : 'App';
+            if (confirm(`Are you sure you want to delete "${appName}"?`)) {
+                apps = apps.filter(a => a.id !== appId);
+                saveAppsToLocalStorage();
+                renderApps();
+                renderDevTable();
+                showToast('App Deleted', `"${appName}" has been removed from store.`, 'info');
+            }
+        }
+
+        // App Details Modal
+        function openDetailsModal(appId) {
+            const app = apps.find(a => a.id === appId);
+            if (!app) return;
+
+            document.getElementById('detailAppName').innerText = app.name;
+            document.getElementById('detailAppCategory').innerText = app.category;
+            document.getElementById('detailAppVersion').innerText = app.version;
+            document.getElementById('detailAppDesc').innerText = app.description;
+            document.getElementById('detailAppDownloads').innerText = app.downloads || 0;
+            document.getElementById('detailAppDownloadLink').href = app.url || '#';
+            
+            const iconEl = document.getElementById('detailAppIcon');
+            iconEl.className = app.icon.startsWith('fa-') ? app.icon : 'fa-solid fa-cube';
+            iconEl.innerText = app.icon.startsWith('fa-') ? '' : app.icon;
+
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('detailsModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('detailsModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function incrementDownloadCount(event) {
+            // Simulate download action feedback
+            showToast('Download Started', 'Your application download is starting securely.', 'success');
+        }
+
+        // Toast Notification System
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toastNotification');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastTitle.innerText = title;
+            toastMessage.innerText = message;
+
+            if (type === 'success') {
+                toastIcon.className = 'w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center';
+                toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else if (type === 'warning') {
+                toastIcon.className = 'w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center';
+                toastIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            } else if (type === 'error') {
+                toastIcon.className = 'w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center';
+                toastIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            } else {
+                toastIcon.className = 'w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center';
+                toastIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+
+        // Initialize on window load
+        window.onload = function() {
+            initAppStore();
+        };
+    </script>
+</body>
+</html>
